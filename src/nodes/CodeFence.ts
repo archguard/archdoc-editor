@@ -18,6 +18,7 @@ import rust from "refractor/lang/rust";
 import sql from "refractor/lang/sql";
 import typescript from "refractor/lang/typescript";
 import yaml from "refractor/lang/yaml";
+import kotlin from "refractor/lang/kotlin";
 
 import { Selection, TextSelection, Transaction } from "prosemirror-state";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
@@ -29,7 +30,7 @@ import Node from "./Node";
 import { ToastType } from "../types";
 
 const PERSISTENCE_KEY = "rme-code-language";
-const DEFAULT_LANGUAGE = "javascript";
+const DEFAULT_LANGUAGE = "kotlin";
 
 [
   bash,
@@ -40,6 +41,7 @@ const DEFAULT_LANGUAGE = "javascript";
   java,
   javascript,
   json,
+  kotlin,
   markup,
   objectivec,
   perl,

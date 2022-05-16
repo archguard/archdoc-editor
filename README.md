@@ -2,6 +2,9 @@
 
 ArchGuard Archdoc Editor for frontend.
 
+- [ ] Monaco Editor
+- [ ] API for Jupyter like Running?
+
 ## License
 
 code based on [https://github.com/outline/rich-markdown-editor](https://github.com/outline/rich-markdown-editor) with BSD 3.0

@@ -16,6 +16,7 @@ export const LANGUAGES = {
   objectivec: "Objective-C",
   java: "Java",
   javascript: "JavaScript",
+  kotlin: "Kotlin",
   json: "JSON",
   perl: "Perl",
   php: "PHP",
