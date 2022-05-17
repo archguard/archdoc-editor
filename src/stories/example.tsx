@@ -1,9 +1,10 @@
 import * as React from "react";
 import { dark, light } from "../styles/theme";
-import Editor from "..";
+import Editor from "@monaco-editor/react";
 import Node from "../nodes/Node";
 import Prism from "../plugins/Prism";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
+import RichMarkdownEditor from "..";
 
 const docSearchResults = [
   {
@@ -123,11 +124,16 @@ class SimpleCode extends Node {
   }
 
   component = props => {
-    return <div>{props.textContent}</div>;
+    return (
+      <Editor
+        height="90vh"
+        defaultLanguage="javascript"
+        defaultValue="// some comment"
+      />
+    );
   };
 
   inputRules({ type }) {
-    console.log(type)
     return [textblockTypeInputRule(/^```$/, type)];
   }
 
@@ -160,7 +166,7 @@ export default function Example(props) {
 
   return (
     <div style={{ padding: "1em 2em" }}>
-      <Editor
+      <RichMarkdownEditor
         disableExtensions={["code_block", "code_fence"]}
         extensions={[new SimpleCode()]}
         onCreateLink={title => {
