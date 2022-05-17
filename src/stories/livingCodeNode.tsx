@@ -6,9 +6,9 @@ import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { NodeSelection } from "prosemirror-state";
 import styled from "styled-components";
 
-export class SimpleCode extends Node {
+export class LivingCodeNode extends Node {
   get name() {
-    return "simple_code";
+    return "living_code";
   }
 
   get schema() {
@@ -91,7 +91,7 @@ export class SimpleCode extends Node {
 
   parseMarkdown() {
     return {
-      block: "simple_code",
+      block: "living_code",
       getAttrs: tok => ({ language: tok.info }),
     };
   }

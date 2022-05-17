@@ -1,7 +1,7 @@
 import * as React from "react";
 import { dark, light } from "../styles/theme";
 import RichMarkdownEditor from "..";
-import { SimpleCode } from "./simpleCode";
+import { LivingCodeNode } from "./livingCodeNode";
 
 const docSearchResults = [
   {
@@ -91,7 +91,7 @@ export default function Example(props) {
     <div style={{ padding: "1em 2em" }}>
       <RichMarkdownEditor
         disableExtensions={["code_block", "code_fence"]}
-        extensions={[new SimpleCode()]}
+        extensions={[new LivingCodeNode()]}
         onCreateLink={title => {
           // Delay to simulate time taken for remote API request to complete
           return new Promise((resolve, reject) => {
