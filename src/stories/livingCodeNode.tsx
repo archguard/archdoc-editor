@@ -1,12 +1,17 @@
 import Node from "../nodes/Node";
-import Prism from "../plugins/Prism";
+import Prism, { LANGUAGES } from "../plugins/Prism";
 import * as React from "react";
 import CellEditor from "./CellEditor";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
-import { NodeSelection } from "prosemirror-state";
+import { NodeSelection, Selection } from "prosemirror-state";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
 
 export class LivingCodeNode extends Node {
+  get languageOptions() {
+    return Object.entries(LANGUAGES);
+  }
+
   get name() {
     return "living_code";
   }
@@ -43,6 +48,25 @@ export class LivingCodeNode extends Node {
     };
   }
 
+  handleLanguageChange = event => {
+    const { view } = this.editor;
+    const { tr } = view.state;
+    const element = event.target;
+    const { top, left } = element.getBoundingClientRect();
+    const result = view.posAtCoords({ top, left });
+
+    if (result) {
+      const language = element.value;
+
+      const transaction = tr
+        .setSelection(Selection.near(view.state.doc.resolve(result.inside)))
+        .setNodeMarkup(result.inside, undefined, {
+          language,
+        });
+      view.dispatch(transaction);
+    }
+  };
+
   get plugins() {
     return [Prism({ name: this.name })];
   }
@@ -53,6 +77,7 @@ export class LivingCodeNode extends Node {
 
     return (
       <StyledCodeBlock onClick={this.handleSelect(props)}>
+        {this.createLanguageSelect(props, language)}
         <CellEditor
           language={language}
           code={value}
@@ -62,6 +87,23 @@ export class LivingCodeNode extends Node {
       </StyledCodeBlock>
     );
   };
+
+  private createLanguageSelect(props, value: string) {
+    return (
+      <select>
+        {this.languageOptions.map(([key, label]) => (
+          <option
+            key={key}
+            value={key === "none" ? "" : key}
+            selected={props.attrs?.language === value}
+            onSelect={this.handleLanguageChange}
+          >
+            {label}
+          </option>
+        ))}
+      </select>
+    );
+  }
 
   inputRules({ type }) {
     return [textblockTypeInputRule(/^```$/, type)];
