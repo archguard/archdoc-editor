@@ -9,8 +9,6 @@ import styled from "styled-components";
 const DEFAULT_LANGUAGE = "kotlin";
 
 export class LivingCodeNode extends Node {
-  isCodeChanged = false;
-
   get name() {
     return "code_fence";
   }
@@ -60,9 +58,8 @@ export class LivingCodeNode extends Node {
     return [Prism({ name: this.name })];
   }
 
-
   component = props => {
-    const language = props.attrs?.language || DEFAULT_LANGUAGE;
+    const language = props.node.attrs?.language || DEFAULT_LANGUAGE;
     const value = props.node.textContent || "";
 
     return (
