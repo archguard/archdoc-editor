@@ -8,8 +8,8 @@ interface BlockEditorProps {
   code: string;
   language: string;
   evalCode: any;
-  onChange: any;
-  changeLanguage: any;
+  codeChange: any;
+  languageChange: any;
   removeSelf: any;
 }
 
@@ -68,7 +68,7 @@ function CellEditor(props: BlockEditorProps) {
         // @ts-ignore
         adjustHeight(editorRef.current);
         setCode(code);
-        props.onChange(code, editorRef.current);
+        props.codeChange(code, editorRef.current);
       }
     },
     [editorRef, setCode]
@@ -81,9 +81,9 @@ function CellEditor(props: BlockEditorProps) {
   const handleLanguageChange = useCallback(
     event => {
       setLanguage(event.target.value);
-      props.changeLanguage(event);
+      props.languageChange(event);
     },
-    [setLanguage, props.changeLanguage]
+    [setLanguage, props.languageChange]
   );
 
   const languageOptions = Object.entries(LANGUAGES);

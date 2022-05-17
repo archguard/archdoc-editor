@@ -1,7 +1,7 @@
 import * as React from "react";
 import { dark, light } from "../styles/theme";
 import RichMarkdownEditor from "..";
-import { LivingCodeNode } from "./livingCodeNode";
+import { LivingCodeNode } from "./LivingCodeNode";
 
 const docSearchResults = [
   {
