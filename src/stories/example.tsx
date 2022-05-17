@@ -87,10 +87,6 @@ class SimpleCode extends Node {
     return "simple_code";
   }
 
-  get type() {
-    return "simple_code";
-  }
-
   get schema() {
     return {
       content: "text*",
@@ -131,6 +127,7 @@ class SimpleCode extends Node {
   };
 
   inputRules({ type }) {
+    console.log(type)
     return [textblockTypeInputRule(/^```$/, type)];
   }
 
