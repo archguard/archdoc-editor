@@ -17,10 +17,6 @@ export default {
     onShowToast: { action: "toast" },
     onFocus: { action: "focused" },
     onBlur: { action: "blurred" },
-    disableExtensions: { control: "array" },
-  },
-  args: {
-    disableExtensions: [],
   },
 } as Meta;
 

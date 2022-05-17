@@ -1,6 +1,9 @@
 import * as React from "react";
 import { dark, light } from "../styles/theme";
 import Editor from "..";
+import Node from "../nodes/Node";
+import Prism from "../plugins/Prism";
+import { textblockTypeInputRule } from "prosemirror-inputrules";
 
 const docSearchResults = [
   {
@@ -79,6 +82,78 @@ const embeds = [
   },
 ];
 
+class SimpleCode extends Node {
+  get name() {
+    return "simple_code";
+  }
+
+  get type() {
+    return "simple_code";
+  }
+
+  get schema() {
+    return {
+      content: "text*",
+      marks: "",
+      group: "block",
+      code: true,
+      defining: true,
+      draggable: false,
+      parseDOM: [
+        { tag: "pre", preserveWhitespace: "full" },
+        {
+          tag: ".archguard-code",
+          preserveWhitespace: "full",
+          contentElement: "code",
+          getAttrs: (dom: HTMLDivElement) => {
+            return {
+              language: dom.dataset.language,
+            };
+          },
+        },
+      ],
+      toDOM: node => {
+        return [
+          "div",
+          { class: "simple-code", "data-language": node.attrs.language },
+          ["pre", ["code", { spellCheck: false }, 0]],
+        ];
+      },
+    };
+  }
+
+  get plugins() {
+    return [Prism({ name: this.name })];
+  }
+
+  component = props => {
+    return <div>{props.textContent}</div>;
+  };
+
+  inputRules({ type }) {
+    return [textblockTypeInputRule(/^```$/, type)];
+  }
+
+  toMarkdown(state, node) {
+    state.write("```" + (node.attrs.language || "") + "\n");
+    state.text(node.textContent, false);
+    state.ensureNewLine();
+    state.write("```");
+    state.closeBlock(node);
+  }
+
+  get markdownToken() {
+    return "simple";
+  }
+
+  parseMarkdown() {
+    return {
+      block: "simple_code",
+      getAttrs: tok => ({ language: tok.info }),
+    };
+  }
+}
+
 export default function Example(props) {
   const { body } = document;
   if (body)
@@ -89,6 +164,8 @@ export default function Example(props) {
   return (
     <div style={{ padding: "1em 2em" }}>
       <Editor
+        disableExtensions={["code_block", "code_fence"]}
+        extensions={[new SimpleCode()]}
         onCreateLink={title => {
           // Delay to simulate time taken for remote API request to complete
           return new Promise((resolve, reject) => {

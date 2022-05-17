@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as React from "react";
 
 import refractor from "refractor/core";
@@ -206,10 +207,6 @@ export default class CodeFence extends Node {
   get plugins() {
     return [Prism({ name: this.name })];
   }
-
-  // component = props => {
-  //   return <div>{props.textContent} </div>;
-  // };
 
   inputRules({ type }) {
     return [textblockTypeInputRule(/^```$/, type)];
