@@ -120,6 +120,9 @@ export default function Example(props) {
             }, Math.random() * 500);
           });
         }}
+        onChange={async value => {
+          console.log(value());
+        }}
         uploadImage={file => {
           console.log("File upload triggered: ", file);
 

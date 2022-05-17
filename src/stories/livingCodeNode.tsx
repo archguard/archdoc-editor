@@ -6,6 +6,7 @@ import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { NodeSelection, Selection } from "prosemirror-state";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
+import { Slice } from "prosemirror-model";
 
 export class LivingCodeNode extends Node {
   get languageOptions() {
@@ -71,9 +72,25 @@ export class LivingCodeNode extends Node {
     return [Prism({ name: this.name })];
   }
 
+  codeStr: string;
+
   component = props => {
     const language = props.attrs?.language || "kotlin";
     const value = props.node.textContent || "";
+
+    const handleChange = code => {
+      // const { view } = this.editor;
+      //
+      // const { getPos, node } = props;
+      // const { type } = node.attrs;
+      //
+      // const transaction = view.state.tr.setNodeMarkup(getPos(), type, {
+      //   type,
+      //   value: code,
+      // });
+      // console.log(transaction);
+      // view.dispatch(transaction);
+    };
 
     return (
       <StyledCodeBlock onClick={this.handleSelect(props)}>
@@ -83,6 +100,7 @@ export class LivingCodeNode extends Node {
           code={value}
           evalCode={""}
           removeSelf={this.deleteSelf(props)}
+          onChange={handleChange}
         />
       </StyledCodeBlock>
     );

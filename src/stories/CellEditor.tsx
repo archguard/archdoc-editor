@@ -1,11 +1,13 @@
 import React, { useCallback, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
+// eslint-disable-next-line import/no-unresolved
 import { IKeyboardEvent } from "monaco-editor";
 
 interface BlockEditorProps {
   code: string;
   language: string;
   evalCode: any;
+  onChange: any;
   removeSelf: any;
 }
 
@@ -14,7 +16,11 @@ function CellEditor(props: BlockEditorProps) {
   const [height, setHeight] = useState("100%");
   const [code, setCode] = useState(props.code);
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   function adjustHeight(editor: monaco.editor.IStandaloneCodeEditor) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const lineHeight = editor.getOption(monaco.editor.EditorOption.lineHeight);
     const lineCount = editor.getModel()?.getLineCount() || 1;
     const editorHeight = editor.getTopForLineNumber(lineCount + 1) + lineHeight;
@@ -59,6 +65,7 @@ function CellEditor(props: BlockEditorProps) {
         // @ts-ignore
         adjustHeight(editorRef.current);
         setCode(code);
+        props.onChange(code);
       }
     },
     [editorRef, setCode]
