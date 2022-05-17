@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import refractor from "refractor/core";
 import bash from "refractor/lang/bash";
 import css from "refractor/lang/css";
@@ -204,6 +206,10 @@ export default class CodeFence extends Node {
   get plugins() {
     return [Prism({ name: this.name })];
   }
+
+  // component = props => {
+  //   return <div>{props.textContent} </div>;
+  // };
 
   inputRules({ type }) {
     return [textblockTypeInputRule(/^```$/, type)];

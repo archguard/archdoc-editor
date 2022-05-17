@@ -442,6 +442,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       .filter((extension: ReactNode) => extension.component)
       .reduce((nodeViews, extension: ReactNode) => {
         const nodeView = (node, view, getPos, decorations) => {
+          console.log(node, extension.component);
           return new ComponentView(extension.component, {
             editor: this,
             extension,
