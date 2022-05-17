@@ -4,7 +4,6 @@ import * as React from "react";
 import CellEditor from "./CellEditor";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { NodeSelection, Selection } from "prosemirror-state";
-import styled from "styled-components";
 
 const DEFAULT_LANGUAGE = "kotlin";
 
@@ -63,7 +62,7 @@ export class LivingCodeNode extends Node {
     const value = props.node.textContent || "";
 
     return (
-      <StyledCodeBlock onClick={this.handleSelect(props)}>
+      <div onClick={this.handleSelect(props)}>
         <CellEditor
           language={language}
           code={value}
@@ -72,7 +71,7 @@ export class LivingCodeNode extends Node {
           codeChange={this.handleCodeChange}
           languageChange={this.handleLanguageChange}
         />
-      </StyledCodeBlock>
+      </div>
     );
   };
 
@@ -153,9 +152,3 @@ export class LivingCodeNode extends Node {
     view.dispatch(transaction);
   };
 }
-
-const StyledCodeBlock = styled.div`
-  margin: 2px 0;
-  border: 2px solid #000;
-  border-radius: 2px;
-`;

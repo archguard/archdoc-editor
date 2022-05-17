@@ -3,6 +3,7 @@ import Editor from "@monaco-editor/react";
 // eslint-disable-next-line import/no-unresolved
 import { IKeyboardEvent } from "monaco-editor";
 import { LANGUAGES } from "../plugins/Prism";
+import styled from "styled-components";
 
 interface BlockEditorProps {
   code: string;
