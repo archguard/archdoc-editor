@@ -68,7 +68,7 @@ function CellEditor(props: BlockEditorProps) {
         // @ts-ignore
         adjustHeight(editorRef.current);
         setCode(code);
-        props.onChange(code);
+        props.onChange(code, editorRef.current);
       }
     },
     [editorRef, setCode]

@@ -1,5 +1,5 @@
 import Node from "../nodes/Node";
-import Prism, { LANGUAGES } from "../plugins/Prism";
+import Prism from "../plugins/Prism";
 import * as React from "react";
 import CellEditor from "./CellEditor";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
@@ -10,7 +10,7 @@ const DEFAULT_LANGUAGE = "kotlin";
 
 export class LivingCodeNode extends Node {
   get name() {
-    return "living_code";
+    return "code_fence";
   }
 
   get schema() {
@@ -36,7 +36,7 @@ export class LivingCodeNode extends Node {
           contentElement: "code",
           getAttrs: (dom: HTMLDivElement) => {
             return {
-              codeStr: "",
+              code: "",
               language: dom.dataset.language,
             };
           },
@@ -80,13 +80,21 @@ export class LivingCodeNode extends Node {
     const value = props.node.textContent || "";
 
     // todo: use better way to update code
-    const handleChange = code => {
-      // const { view } = this.editor;
-      // const { tr } = view.state;
-      // const transaction = tr.setNodeMarkup(code, undefined, {
-      //   code,
-      // });
-      // view.dispatch(transaction);
+    const handleChange = (code: string, editor: any) => {
+      const { view } = this.editor;
+      const { tr } = view.state;
+      const element = editor.getDomNode();
+      const { top, left } = element.getBoundingClientRect();
+      const result = view.posAtCoords({ top, left });
+
+      if (result) {
+        const transaction = tr
+          .setSelection(Selection.near(view.state.doc.resolve(result.inside)))
+          .setNodeMarkup(result.inside, undefined, {
+            code,
+          });
+        view.dispatch(transaction);
+      }
     };
 
     return (
@@ -108,6 +116,7 @@ export class LivingCodeNode extends Node {
   }
 
   toMarkdown(state, node) {
+    console.log(node.attrs);
     state.write("```" + (node.attrs.language || "") + "\n");
     state.text(node.textContent, false);
     state.ensureNewLine();
@@ -131,7 +140,7 @@ export class LivingCodeNode extends Node {
 
   parseMarkdown() {
     return {
-      block: "living_code",
+      block: "code_fence",
       getAttrs: tok => ({ language: tok.info }),
     };
   }
