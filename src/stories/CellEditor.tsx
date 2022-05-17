@@ -1,10 +1,12 @@
 import React, { useCallback, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
+import { IKeyboardEvent } from "monaco-editor";
 
 interface BlockEditorProps {
   code: string;
   language: string;
   evalCode: any;
+  removeSelf: any;
 }
 
 function CellEditor(props: BlockEditorProps) {
@@ -24,6 +26,17 @@ function CellEditor(props: BlockEditorProps) {
     });
   }
 
+  function initEditor(editor) {
+    editor.focus();
+    editor.onKeyDown((e: IKeyboardEvent) => {
+      if (e.code === "Backspace") {
+        if (editor.getValue() === "") {
+          props.removeSelf();
+        }
+      }
+    });
+  }
+
   const handleEditorDidMount = useCallback(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -33,6 +46,7 @@ function CellEditor(props: BlockEditorProps) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         adjustHeight(editorRef.current);
+        initEditor(editor);
       }
     },
     [editorRef, setHeight, code]
@@ -47,8 +61,9 @@ function CellEditor(props: BlockEditorProps) {
         setCode(code);
       }
     },
-    [setCode]
+    [editorRef, setCode]
   );
+
   useCallback(() => {
     props.evalCode(code);
   }, [code]);

@@ -4,6 +4,7 @@ import * as React from "react";
 import CellEditor from "./CellEditor";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { NodeSelection } from "prosemirror-state";
+import styled from "styled-components";
 
 export class SimpleCode extends Node {
   get name() {
@@ -51,9 +52,14 @@ export class SimpleCode extends Node {
     const value = props.node.textContent || "";
 
     return (
-      <div onClick={ this.handleSelect(props) }>
-        <CellEditor language={ language } code={ value } evalCode={ "" } />
-      </div>
+      <StyledCodeBlock onClick={this.handleSelect(props)}>
+        <CellEditor
+          language={language}
+          code={value}
+          evalCode={""}
+          removeSelf={this.deleteSelf(props)}
+        />
+      </StyledCodeBlock>
     );
   };
 
@@ -75,7 +81,7 @@ export class SimpleCode extends Node {
 
   // todo: remove by blocks
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  emptySelf = ({ getPos }) => () => {
+  deleteSelf = ({ getPos }) => () => {
     const { view } = this.editor;
     const $pos = view.state.doc.resolve(getPos());
     const tr = view.state.tr.setSelection(new NodeSelection($pos));
@@ -99,3 +105,9 @@ export class SimpleCode extends Node {
     view.dispatch(transaction);
   };
 }
+
+const StyledCodeBlock = styled.div`
+  margin: 2px 0;
+  border: 2px solid #000;
+  border-radius: 2px;
+`;
