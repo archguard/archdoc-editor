@@ -5,8 +5,8 @@ import CellEditor from "./CellEditor";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { NodeSelection, Selection } from "prosemirror-state";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import { Slice } from "prosemirror-model";
+
+const DEFAULT_LANGUAGE = "kotlin";
 
 export class LivingCodeNode extends Node {
   get languageOptions() {
@@ -19,6 +19,12 @@ export class LivingCodeNode extends Node {
 
   get schema() {
     return {
+      attrs: {
+        language: {
+          default: DEFAULT_LANGUAGE,
+          code: "",
+        },
+      },
       content: "text*",
       marks: "",
       group: "block",
@@ -34,6 +40,7 @@ export class LivingCodeNode extends Node {
           contentElement: "code",
           getAttrs: (dom: HTMLDivElement) => {
             return {
+              codeStr: "",
               language: dom.dataset.language,
             };
           },
@@ -72,23 +79,18 @@ export class LivingCodeNode extends Node {
     return [Prism({ name: this.name })];
   }
 
-  codeStr: string;
-
   component = props => {
-    const language = props.attrs?.language || "kotlin";
+    const language = props.attrs?.language || DEFAULT_LANGUAGE;
     const value = props.node.textContent || "";
 
+    // todo: use better way to update code
     const handleChange = code => {
       // const { view } = this.editor;
-      //
-      // const { getPos, node } = props;
-      // const { type } = node.attrs;
-      //
-      // const transaction = view.state.tr.setNodeMarkup(getPos(), type, {
-      //   type,
-      //   value: code,
+      // const { tr } = view.state;
+
+      // const transaction = tr.setNodeMarkup(code, undefined, {
+      //   code,
       // });
-      // console.log(transaction);
       // view.dispatch(transaction);
     };
 
@@ -108,14 +110,9 @@ export class LivingCodeNode extends Node {
 
   private createLanguageSelect(props, value: string) {
     return (
-      <select>
+      <select defaultValue={value} onChange={this.handleLanguageChange}>
         {this.languageOptions.map(([key, label]) => (
-          <option
-            key={key}
-            value={key === "none" ? "" : key}
-            selected={props.attrs?.language === value}
-            onSelect={this.handleLanguageChange}
-          >
+          <option key={key} value={key === "none" ? "" : key}>
             {label}
           </option>
         ))}
