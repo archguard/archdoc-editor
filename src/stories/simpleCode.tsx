@@ -3,6 +3,7 @@ import Prism from "../plugins/Prism";
 import * as React from "react";
 import CellEditor from "./CellEditor";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
+import { NodeSelection } from "prosemirror-state";
 
 export class SimpleCode extends Node {
   get name() {
@@ -16,6 +17,7 @@ export class SimpleCode extends Node {
       group: "block",
       code: true,
       defining: true,
+      selectable: true,
       draggable: false,
       parseDOM: [
         { tag: "pre", preserveWhitespace: "full" },
@@ -48,7 +50,11 @@ export class SimpleCode extends Node {
     const language = props.attrs?.language || "kotlin";
     const value = props.node.textContent || "";
 
-    return <CellEditor language={language} code={value} evalCode={""} />;
+    return (
+      <div onClick={ this.handleSelect(props) }>
+        <CellEditor language={ language } code={ value } evalCode={ "" } />
+      </div>
+    );
   };
 
   inputRules({ type }) {
@@ -67,10 +73,29 @@ export class SimpleCode extends Node {
     return "fence";
   }
 
+  // todo: remove by blocks
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  emptySelf = ({ getPos }) => () => {
+    const { view } = this.editor;
+    const $pos = view.state.doc.resolve(getPos());
+    const tr = view.state.tr.setSelection(new NodeSelection($pos));
+    view.dispatch(tr.deleteSelection());
+    view.focus();
+  };
+
   parseMarkdown() {
     return {
       block: "simple_code",
       getAttrs: tok => ({ language: tok.info }),
     };
   }
+
+  handleSelect = ({ getPos }) => event => {
+    event.preventDefault();
+
+    const { view } = this.editor;
+    const $pos = view.state.doc.resolve(getPos());
+    const transaction = view.state.tr.setSelection(new NodeSelection($pos));
+    view.dispatch(transaction);
+  };
 }

@@ -24,7 +24,19 @@ const Template: Story<Props> = args => <Example {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  defaultValue: `# Welcome
+  defaultValue: `
+  
+## DSL
 
-Just an easy to use **Markdown** editor with \`slash commands\``,
+\`\`\`kotlin
+@file:DependsOn("org.archguard.scanner:doc-executor:2.0.0-alpha.2")
+import org.archguard.dsl.*
+var layer = layered {
+    prefixId("org.archguard")
+    component("controller") dependentOn component("service")
+    组件("service") 依赖于 组件("repository")
+}
+\`\`\`
+  
+  `,
 };
