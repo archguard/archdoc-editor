@@ -9,10 +9,6 @@ import styled from "styled-components";
 const DEFAULT_LANGUAGE = "kotlin";
 
 export class LivingCodeNode extends Node {
-  get languageOptions() {
-    return Object.entries(LANGUAGES);
-  }
-
   get name() {
     return "living_code";
   }
@@ -87,7 +83,6 @@ export class LivingCodeNode extends Node {
     const handleChange = code => {
       // const { view } = this.editor;
       // const { tr } = view.state;
-
       // const transaction = tr.setNodeMarkup(code, undefined, {
       //   code,
       // });
@@ -96,29 +91,17 @@ export class LivingCodeNode extends Node {
 
     return (
       <StyledCodeBlock onClick={this.handleSelect(props)}>
-        {this.createLanguageSelect(props, language)}
         <CellEditor
           language={language}
           code={value}
           evalCode={""}
           removeSelf={this.deleteSelf(props)}
           onChange={handleChange}
+          changeLanguage={this.handleLanguageChange}
         />
       </StyledCodeBlock>
     );
   };
-
-  private createLanguageSelect(props, value: string) {
-    return (
-      <select defaultValue={value} onChange={this.handleLanguageChange}>
-        {this.languageOptions.map(([key, label]) => (
-          <option key={key} value={key === "none" ? "" : key}>
-            {label}
-          </option>
-        ))}
-      </select>
-    );
-  }
 
   inputRules({ type }) {
     return [textblockTypeInputRule(/^```$/, type)];

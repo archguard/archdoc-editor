@@ -2,12 +2,14 @@ import React, { useCallback, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 // eslint-disable-next-line import/no-unresolved
 import { IKeyboardEvent } from "monaco-editor";
+import { LANGUAGES } from "../plugins/Prism";
 
 interface BlockEditorProps {
   code: string;
   language: string;
   evalCode: any;
   onChange: any;
+  changeLanguage: any;
   removeSelf: any;
 }
 
@@ -15,6 +17,7 @@ function CellEditor(props: BlockEditorProps) {
   const editorRef = useRef(null);
   const [height, setHeight] = useState("100%");
   const [code, setCode] = useState(props.code);
+  const [language, setLanguage] = useState(props.language);
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -75,11 +78,34 @@ function CellEditor(props: BlockEditorProps) {
     props.evalCode(code);
   }, [code]);
 
+  const handleLanguageChange = useCallback(
+    event => {
+      setLanguage(event.target.value);
+      props.changeLanguage(event);
+    },
+    [setLanguage, props.changeLanguage]
+  );
+
+  const languageOptions = Object.entries(LANGUAGES);
+
+  const createLanguageSelect = (value: string) => {
+    return (
+      <select defaultValue={value} onChange={handleLanguageChange}>
+        {languageOptions.map(([key, label]) => (
+          <option key={key} value={key === "none" ? "" : key}>
+            {label}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
   return (
     <div>
+      {createLanguageSelect(language)}
       <Editor
         height={height}
-        defaultLanguage={props.language}
+        language={language}
         value={code}
         onChange={changeCode}
         onMount={handleEditorDidMount}
